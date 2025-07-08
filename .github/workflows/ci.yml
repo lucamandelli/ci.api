@@ -9,16 +9,18 @@ jobs:
   build:
     name: 'Build and Push'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [16, 18, 20]
+    # strategy:
+    #   matrix:
+    #     node-version: [16, 18, 20]
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup node | ${{ matrix.node-version }}
+      # - name: Setup node | ${{ matrix.node-version }}
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          # node-version: ${{ matrix.node-version }}
+          node-version: 20
           cache: 'npm'
       - run: npm ci
       - run: npm test
@@ -33,10 +35,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build docker image
-        run: docker build -t local-image:latest .
-      - name: Tag docker image
-        run: |
-          docker tag local-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
-      - name: Push docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:latest
+
+      # - name: Build docker image
+      #   run: docker build -t local-image:latest .
+      # - name: Tag docker image
+      #   run: |
+      #     docker tag local-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
+      # - name: Push docker image
+      #   run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
