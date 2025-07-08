@@ -29,4 +29,4 @@ jobs:
           SHA=$(echo $GITHUB_SHA | head -c 7)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
       - name: Build docker image
-        run: docker build -t luca-api:${{ sha }}
+        run: docker build -t luca-api:${{ steps.generate-tag.outputs.sha }}
