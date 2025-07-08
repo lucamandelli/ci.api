@@ -37,6 +37,6 @@ jobs:
         run: docker build -t local-image:latest .
       - name: Tag docker image
         run: |
-          docker tag local-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/luca-api:${{ steps.generate-tag.outputs.sha }}
+          docker tag local-image:latest ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
       - name: Push docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/luca-api:${{ steps.generate-tag.outputs.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/luca-ci-api:${{ steps.generate-tag.outputs.sha }}
