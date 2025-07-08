@@ -34,6 +34,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build docker image
-        run: docker build -t lucapmandelli/luca-api:${{ steps.generate-tag.outputs.sha }} .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/luca-api:${{ steps.generate-tag.outputs.sha }} .
       - name: Push docker image
-        run: docker push lucapmandelli/luca-api:${{ steps.generate-tag.outputs.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/luca-api:${{ steps.generate-tag.outputs.sha }}
